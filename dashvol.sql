@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.6 (Ubuntu 12.6-1.pgdg20.10+1)
--- Dumped by pg_dump version 12.6 (Ubuntu 12.6-1.pgdg20.10+1)
+-- Dumped from database version 13.1
+-- Dumped by pg_dump version 13.2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -163,6 +163,7 @@ COPY public.vol_hours (user_id, vol_id, hours, vol_date, vol_time) FROM stdin;
 --
 
 COPY public.vol_places (vol_id, vol_name, vol_desc, vol_website) FROM stdin;
+11	Best Buyooos	It is a best buy	https://www.bestbuy.com
 \.
 
 
@@ -170,14 +171,14 @@ COPY public.vol_places (vol_id, vol_name, vol_desc, vol_website) FROM stdin;
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 1, false);
+SELECT pg_catalog.setval('public.users_user_id_seq', 13, true);
 
 
 --
 -- Name: vol_places_vol_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.vol_places_vol_id_seq', 1, false);
+SELECT pg_catalog.setval('public.vol_places_vol_id_seq', 11, true);
 
 
 --
@@ -205,27 +206,35 @@ ALTER TABLE ONLY public.vol_places
 
 
 --
--- Name: user_details user_details_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: vol_places vol_places_vol_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.vol_places
+    ADD CONSTRAINT vol_places_vol_name_key UNIQUE (vol_name);
+
+
+--
+-- Name: user_details fk_user_details; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.user_details
-    ADD CONSTRAINT user_details_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+    ADD CONSTRAINT fk_user_details FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
 
 
 --
--- Name: vol_hours vol_hours_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.vol_hours
-    ADD CONSTRAINT vol_hours_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
-
-
---
--- Name: vol_hours vol_hours_vol_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: vol_hours fk_vol_places_hours; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.vol_hours
-    ADD CONSTRAINT vol_hours_vol_id_fkey FOREIGN KEY (vol_id) REFERENCES public.vol_places(vol_id);
+    ADD CONSTRAINT fk_vol_places_hours FOREIGN KEY (vol_id) REFERENCES public.vol_places(vol_id) ON DELETE CASCADE;
+
+
+--
+-- Name: vol_hours fk_vol_places_user; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.vol_hours
+    ADD CONSTRAINT fk_vol_places_user FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
 
 
 --
